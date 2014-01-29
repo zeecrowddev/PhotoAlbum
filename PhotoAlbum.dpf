@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Project Template="QtResourceProject">
+  <Configurations>
+    <Configuration name="Debug">
+      <Properties>
+        <OutputDirectory value="..\..\..\..\ZC\Crowd\source\Client\bin\Debug\packages\PhotoAlbum" />
+        <ShortNodeName />
+        <IntermediateFilesDirectory value=".\IntermediateFiles\Debug" />
+        <CommandLineArguments value="" />
+        <Executable value="" />
+        <WorkingDirectory value="..\..\..\Foundation\Build\Debug\" />
+      </Properties>
+    </Configuration>
+    <Configuration name="Release">
+      <Properties />
+    </Configuration>
+  </Configurations>
+  <Properties>
+    <ItemsDirectoryRelativePath value="" />
+    <Defines value="" />
+    <EntryPoint value="" />
+    <IncludeDirectories value="" />
+    <TestFramework value="" />
+    <CompressionLevel value="Default" />
+    <CompressionThreshold value="70" />
+    <OutputFileName value="PhotoAlbum" />
+    <ResourceName value="" />
+    <RootPrefix value="PhotoAlbum" />
+  </Properties>
+  <Items>
+    <Item Template="QtResourceProjectFolder">
+      <QtResourceProjectFolder Name="Packages">
+        <Properties />
+        <Items>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="PhotoAlbumApplication.cfg">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+        </Items>
+      </QtResourceProjectFolder>
+    </Item>
+    <Item Template="QtResourceProjectFolder">
+      <QtResourceProjectFolder Name="Resources">
+        <Properties />
+        <Items>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="close.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="export.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Alias value="" />
+                <CopyAs value="" />
+                <CopyToOutputDirectory value="Never" />
+                <CustomTool value="" />
+                <Locale value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="import.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Alias value="" />
+                <CopyAs value="" />
+                <CopyToOutputDirectory value="Never" />
+                <CustomTool value="" />
+                <Locale value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="tile.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Alias value="" />
+                <CopyAs value="" />
+                <CopyToOutputDirectory value="Never" />
+                <CustomTool value="" />
+                <Locale value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="bin.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Alias value="" />
+                <CopyAs value="" />
+                <CopyToOutputDirectory value="Never" />
+                <CustomTool value="" />
+                <Locale value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="updates.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Alias value="" />
+                <CopyAs value="" />
+                <CopyToOutputDirectory value="Never" />
+                <CustomTool value="" />
+                <Locale value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+        </Items>
+      </QtResourceProjectFolder>
+    </Item>
+    <Item Template="QtResourceProjectFolder">
+      <QtResourceProjectFolder Name="Views">
+        <Properties />
+        <Items>
+          <Item Template="QtResourceProjectFolder">
+            <QtResourceProjectFolder Name="Folder">
+              <Properties />
+              <Items />
+            </QtResourceProjectFolder>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="AlbumListView.qml">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="AlbumListViewDelegate.qml">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="Main.js">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="Main.qml">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="Tools.js">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+                <CopyAs value="" />
+                <CopyToOutputDirectory value="Never" />
+                <CustomTool value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="SplashScreen.qml">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Alias value="" />
+                <CopyAs value="" />
+                <CopyToOutputDirectory value="Never" />
+                <CustomTool value="" />
+                <Locale value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+        </Items>
+      </QtResourceProjectFolder>
+    </Item>
+    <Item Template="QtResourceFile">
+      <QtResourceFile FileName="PhotoAlbum.cfg">
+        <Properties>
+          <BuildAction value="Content" />
+          <Alias value="" />
+          <CopyAs value="" />
+          <CopyToOutputDirectory value="OnlyIfNewer" />
+          <CustomTool value="" />
+          <Locale value="" />
+        </Properties>
+        <Items />
+      </QtResourceFile>
+    </Item>
+  </Items>
+</Project>
