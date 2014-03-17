@@ -3,7 +3,7 @@
   <Configurations>
     <Configuration name="Debug">
       <Properties>
-        <OutputDirectory value="..\..\..\..\ZC\Crowd\source\Client\bin\Debug\packages\PhotoAlbum" />
+        <OutputDirectory value="..\..\dev\ZC\Crowd\Source\Client\bin\Debug\packages\PhotoAlbum" />
         <ShortNodeName />
         <IntermediateFilesDirectory value=".\IntermediateFiles\Debug" />
         <CommandLineArguments value="" />
@@ -50,6 +50,16 @@
         <Properties />
         <Items>
           <Item Template="QtResourceFile">
+            <QtResourceFile FileName="bin.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
             <QtResourceFile FileName="close.png">
               <Properties>
                 <BuildAction value="Compile" />
@@ -63,11 +73,28 @@
             <QtResourceFile FileName="export.png">
               <Properties>
                 <BuildAction value="Compile" />
-                <Alias value="" />
-                <CopyAs value="" />
-                <CopyToOutputDirectory value="Never" />
-                <CustomTool value="" />
                 <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="folder.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="icon.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
               </Properties>
               <Items />
             </QtResourceFile>
@@ -76,11 +103,8 @@
             <QtResourceFile FileName="import.png">
               <Properties>
                 <BuildAction value="Compile" />
-                <Alias value="" />
-                <CopyAs value="" />
-                <CopyToOutputDirectory value="Never" />
-                <CustomTool value="" />
                 <Locale value="" />
+                <Alias value="" />
               </Properties>
               <Items />
             </QtResourceFile>
@@ -89,37 +113,26 @@
             <QtResourceFile FileName="tile.png">
               <Properties>
                 <BuildAction value="Compile" />
-                <Alias value="" />
-                <CopyAs value="" />
-                <CopyToOutputDirectory value="Never" />
-                <CustomTool value="" />
                 <Locale value="" />
+                <Alias value="" />
               </Properties>
               <Items />
             </QtResourceFile>
           </Item>
           <Item Template="QtResourceFile">
-            <QtResourceFile FileName="bin.png">
+            <QtResourceFile FileName="next.png">
               <Properties>
                 <BuildAction value="Compile" />
-                <Alias value="" />
-                <CopyAs value="" />
-                <CopyToOutputDirectory value="Never" />
-                <CustomTool value="" />
                 <Locale value="" />
+                <Alias value="" />
               </Properties>
               <Items />
             </QtResourceFile>
           </Item>
           <Item Template="QtResourceFile">
-            <QtResourceFile FileName="updates.png">
+            <QtResourceFile FileName="previous.png">
               <Properties>
                 <BuildAction value="Compile" />
-                <Alias value="" />
-                <CopyAs value="" />
-                <CopyToOutputDirectory value="Never" />
-                <CustomTool value="" />
-                <Locale value="" />
               </Properties>
               <Items />
             </QtResourceFile>
@@ -132,23 +145,34 @@
         <Properties />
         <Items>
           <Item Template="QtResourceProjectFolder">
-            <QtResourceProjectFolder Name="Folder">
+            <QtResourceProjectFolder Name="Delegates">
               <Properties />
-              <Items />
+              <Items>
+                <Item Template="QtResourceFile">
+                  <QtResourceFile FileName="AlbumListViewDelegate.qml">
+                    <Properties>
+                      <BuildAction value="Compile" />
+                      <Locale value="" />
+                      <Alias value="" />
+                    </Properties>
+                    <Items />
+                  </QtResourceFile>
+                </Item>
+                <Item Template="QtResourceFile">
+                  <QtResourceFile FileName="UploadViewDelegate.qml">
+                    <Properties>
+                      <BuildAction value="Compile" />
+                      <Locale value="" />
+                      <Alias value="" />
+                    </Properties>
+                    <Items />
+                  </QtResourceFile>
+                </Item>
+              </Items>
             </QtResourceProjectFolder>
           </Item>
           <Item Template="QtResourceFile">
             <QtResourceFile FileName="AlbumListView.qml">
-              <Properties>
-                <BuildAction value="Compile" />
-                <Locale value="" />
-                <Alias value="" />
-              </Properties>
-              <Items />
-            </QtResourceFile>
-          </Item>
-          <Item Template="QtResourceFile">
-            <QtResourceFile FileName="AlbumListViewDelegate.qml">
               <Properties>
                 <BuildAction value="Compile" />
                 <Locale value="" />
@@ -178,6 +202,19 @@
             </QtResourceFile>
           </Item>
           <Item Template="QtResourceFile">
+            <QtResourceFile FileName="SplashScreen.qml">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Alias value="" />
+                <CopyAs value="" />
+                <CopyToOutputDirectory value="Never" />
+                <CustomTool value="" />
+                <Locale value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
             <QtResourceFile FileName="Tools.js">
               <Properties>
                 <BuildAction value="Compile" />
@@ -191,14 +228,11 @@
             </QtResourceFile>
           </Item>
           <Item Template="QtResourceFile">
-            <QtResourceFile FileName="SplashScreen.qml">
+            <QtResourceFile FileName="UploadStatusView.qml">
               <Properties>
                 <BuildAction value="Compile" />
-                <Alias value="" />
-                <CopyAs value="" />
-                <CopyToOutputDirectory value="Never" />
-                <CustomTool value="" />
                 <Locale value="" />
+                <Alias value="" />
               </Properties>
               <Items />
             </QtResourceFile>

@@ -18,286 +18,260 @@
 ** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 2.0
+import QtQuick 2.2
 import QtQuick.Controls 1.1
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.1
+import QtQuick.Controls.Styles 1.1
 
 import ZcClient 1.0 as Zc
 
-
+import "./Delegates"
 import "Tools.js" as Tools
 
 
 Item
 {
 
+    focus : true
+
+    Keys.onPressed:
+    {
+        console.log(">> key pressed ")
+    }
+
     anchors.fill: parent
 
 
     function setModel(model)
     {
-        repeater.model = model
+        console.log(">> set Model " + model)
+
+        //   repeater.model = model
+        listView.model = model
+    }
+
+    function setPreviewSource(source)
+    {
+        preview.source = source;
     }
 
     signal clean();
 
-    Slider
+    SplitView
     {
-        id              : slider
-        anchors.top     : parent.top
-        anchors.left    : parent.left
-        anchors.right   : parent.right
+        anchors.fill: parent
 
-        height: 30
+        orientation: Qt.Vertical
 
-        value : 1
-
-        maximumValue: 2
-        minimumValue: 0.5
-        stepSize: 0.1
-
-        orientation : Qt.Horizontal
-    }
+        //        Component
+        //        {
+        //            id : handleDelegateHorizontal
+        //            Rectangle
+        //            {
+        //                width : 10
+        //                color :  styleData.hovered ? "grey" :  "lightgrey"
+        //            }
+        //        }
 
 
-    ScrollView
-    {
-        id : fodlerGridIconeViewId
+        handleDelegate : handleDelegateVertical
 
-        anchors.top: slider.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-
-
-
-
-        Flow
+        Item
         {
-            id : listView
-            anchors.top  : parent.top
-            anchors.left : parent.left
+            height : 0
 
-            width : slider.width
-
-            flow : Flow.LeftToRight
-
-            spacing: 10
-
-            Repeater {
-                id : repeater
-
-
-                Item
+            Image
+            {
+                id : preview
+                anchors
                 {
-
-                    width: 200 * slider.value
-                    height: 200 * slider.value
-
-
-                    Rectangle
-                    {
-                        anchors.fill: parent
-                        color : "lightgrey"
-                        opacity: 0.5
-                    }
-
-                    Image
-                    {
-                        id : image
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-
-                        asynchronous: true
-
-                        width : parent.width
-                        height : 200 * slider.value - 20
-
-                        fillMode: Image.PreserveAspectFit
-
-                        Component.onCompleted:
-                        {
-                            refreshImage();
-                        }
-
-
-                        MouseArea
-                        {
-                            anchors.fill: parent
-
-                            onClicked:
-                            {
-                                if (!item.cast.isBusy)
-                                {
-                                    mainView.openFile(item)
-                                }
-                            }
-                        }
-
-
-                        function refreshImage()
-                        {
-                            image.source = "";
-//                            image.source = documentFolder.getUrl(item.cast);
-
-//                            if (item.status === "" ||item.status === null || item.status === "upload")
-//                            {
-                                source = "image://tiles/" + "file:///" + documentFolder.localPath + item.cast.name
-//                            }
-//                            else
-//                            {
-//                                source = "image://tiles/" + "file:///" + item.cast.name
-//                            }
-                        }
-
-                        onStatusChanged:
-                        {
-                            if (status == Image.Error)
-                            {
-                                extension.text = item.cast.suffix();
-                            }
-//                            else
-//                            {
-//                                if (sourceSize.width < parent.width && sourceSize.height < parent.height)
-//                                {
-//                                    image.width = sourceSize.width;
-//                                    image.height = sourceSize.height;
-
-//                                    image.anchors.centerIn = parent;
-//                                }
-
-//                            }
-
-                        }
-
-                    }
-
-                    Image
-                    {
-                        height      : 25
-                        width       : 25
-
-                        anchors.bottom: image.bottom
-                        anchors.right: parent.right
-                        anchors.leftMargin: 3
-                        anchors.rightMargin: 3
-
-                        visible    : item.status !== "" && !item.busy
-                        source : item.status === "upload" ? "qrc:/PhotoAlbum/Resources/updateUp.png" : "qrc:/PhotoAlbum/Resources/updateDown.png"
-
-                        MouseArea
-                        {
-                            anchors.fill: parent
-                            enabled     : parent.visible
-
-                            onClicked:
-                            {
-                                mainView.synchronize(item)
-                            }
-                        }
-
-                    }
-
-                    Rectangle
-                    {
-                        anchors.verticalCenter: image.verticalCenter
-                        anchors.left: parent.left
-                        anchors.leftMargin: 5
-                        visible : image.status == Image.Loading
-                        color   : "blue"
-                        opacity: 0.5
-
-                        height : 20
-                        width  : (image.width - 10) * image.progress
-
-                    }
-
-                    Rectangle
-                    {
-                        anchors.verticalCenter: image.verticalCenter
-                        anchors.left: parent.left
-                        anchors.leftMargin: 5
-
-                        visible : item.queryProgress > 0
-                        color   : "green"
-                        opacity: 0.5
-
-                        height : 20
-                        width  : (image.width - 10) * item.queryProgress / 100
-
-
-                        onVisibleChanged:
-                        {
-                            if (visible === false)
-                            {
-                                image.refreshImage();
-                            }
-                        }
-                    }
-
-                    Rectangle
-                    {
-                        width : parent.width
-                        height: 20
-
-                        anchors.left : parent.left
-                        anchors.top : image.bottom
-
-                        color : "lightgrey"
-                        opacity: 0.5
-
-                        Label
-                        {
-                            anchors.fill: parent
-
-                            font.pixelSize: 16
-                            text : model.name
-                            elide : Text.ElideRight
-
-                            horizontalAlignment: Text.AlignHCenter
-
-                        }
-                    }
-
-                    Label
-                    {
-                        id : extension
-                        width : parent.width
-                        anchors.centerIn: parent
-                        font.pixelSize: 25
-                        text : model.name
-                        elide : Text.ElideRight
-                        horizontalAlignment: Text.AlignHCenter
-
-                        visible: image.status === Image.Error
-                    }
-
-
-                    //        CheckBox
-                    //        {
-                    //            id : checkBox
-                    //            anchors.left: parent.left
-                    //            anchors.top: parent.top
-                    //            anchors.leftMargin: 3
-                    //            anchors.rightMargin: 3
-
-                    //            enabled : !item.busy
-
-                    //            onCheckedChanged:
-                    //            {
-                    //                model.cast.isSelected = checked
-                    //            }
-
-                    //            Component.onCompleted :
-                    //            {
-                    //                checked = model.cast.isSelected;
-                    //            }
-                    //        }
+                    top : parent.top
+                    right : parent.right
+                    left : parent.left
+                    bottom : parent.bottom
+                    bottomMargin : 70
+                    topMargin : 10
                 }
 
+                fillMode: Image.PreserveAspectFit
             }
 
+            Row
+            {
+                width : 110
+                height : 50
+                spacing: 10
+
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 5
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                Button
+                {
+                    width : 50
+                    height : 50
+
+
+                    style:
+                        ButtonStyle {
+                                        background: Rectangle {
+                                            implicitWidth: 50
+                                            implicitHeight: 50
+
+                                            color : control.pressed ? "#EEEEEE" : "#00000000"
+                                            radius: 4
+
+                                            Image
+                                            {
+                                                source : "qrc:/PhotoAlbum/Resources/previous.png"
+                                                anchors.fill: parent
+                                            }
+                                        }
+                                    }
+
+                    onClicked:
+                    {
+                        if (listView.currentIndex > 0 )
+                            listView.currentIndex = listView.currentIndex - 1
+                    }
+                }
+
+                Button
+                {
+                    width : 50
+                    height : 50
+
+
+                    style:
+                        ButtonStyle {
+                                        background: Rectangle {
+                                            implicitWidth: 50
+                                            implicitHeight: 50
+
+                                            color : control.pressed ? "#EEEEEE" : "#00000000"
+                                            radius: 4
+
+                                            Image
+                                            {
+                                                source : "qrc:/PhotoAlbum/Resources/next.png"
+                                                anchors.fill: parent
+                                            }
+                                        }
+                                    }
+
+                    onClicked:
+                    {
+                        if ( listView.currentIndex + 1 <  listView.model.count  )
+                             listView.currentIndex = listView.currentIndex + 1
+
+                    }
+                }
+            }
+
+            ProgressBar
+            {
+                anchors.centerIn: preview
+                visible : preview.status === Image.Loading
+                opacity: 0.5
+
+                height : 20
+                width : preview.paintedWidth - 10
+                minimumValue: 0
+                maximumValue: 1
+                value       : preview.progress
+
+                style: ProgressBarStyle{}
+            }
+        }
+
+        Item
+        {
+            Layout.fillHeight : true
+            Layout.fillWidth : true
+
+            Keys.onPressed:
+            {
+                console.log(">> key pressed ")
+            }
+
+            Slider
+            {
+                id              : slider
+                anchors.top     : parent.top
+                anchors.left    : parent.left
+                anchors.right   : parent.right
+
+                height: 30
+
+                value : 1
+
+                maximumValue: 2
+                minimumValue: 0.5
+                stepSize: 0.1
+
+                orientation : Qt.Horizontal
+
+                style : SliderStyle {}
+            }
+
+            ScrollView
+            {
+
+                anchors.top     : slider.bottom
+                anchors.left    : parent.left
+                anchors.right   : parent.right
+                anchors.bottom  : parent.bottom
+
+
+               // ListView
+                GridView
+                {
+
+                    Component
+                    {
+                        id: highlight
+
+                        Rectangle
+                        {
+                            height      : appStyleId.baseHeight / 2 + 4
+                            width       : appStyleId.baseHeight * 1.5
+
+                            border.width: 5
+                            border.color: "orange"
+                            color: "#00000000"
+                            z : 100
+                        }
+                    }
+
+                    onCurrentIndexChanged:
+                    {
+                        preview.source =    documentFolder.getUrl(model.get(currentIndex));
+                    }
+
+                    highlight: highlight
+                    highlightFollowsCurrentItem: true
+
+                    id : listView
+                    anchors.top  : parent.top
+                    anchors.left: parent.left
+
+                    width : slider.width
+
+                    clip : true
+
+                    cellHeight : 150 * slider.value + 10
+                    cellWidth : 150 * slider.value + 10
+
+                    keyNavigationWraps : true
+
+                    Keys.onPressed:
+                    {
+                        console.log(">> key pressed ")
+                    }
+
+                    delegate : AlbumListViewDelegate { gridView : listView; width: 150 * slider.value;     height: 150 * slider.value;}
+                }
+            }
         }
     }
-
 }
