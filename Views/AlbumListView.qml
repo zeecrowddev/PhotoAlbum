@@ -34,19 +34,11 @@ Item
 
     focus : true
 
-    Keys.onPressed:
-    {
-        console.log(">> key pressed ")
-    }
-
     anchors.fill: parent
 
 
     function setModel(model)
     {
-        console.log(">> set Model " + model)
-
-        //   repeater.model = model
         listView.model = model
     }
 
@@ -114,20 +106,20 @@ Item
 
                     style:
                         ButtonStyle {
-                                        background: Rectangle {
-                                            implicitWidth: 50
-                                            implicitHeight: 50
+                        background: Rectangle {
+                            implicitWidth: 50
+                            implicitHeight: 50
 
-                                            color : control.pressed ? "#EEEEEE" : "#00000000"
-                                            radius: 4
+                            color : control.pressed ? "#EEEEEE" : "#00000000"
+                            radius: 4
 
-                                            Image
-                                            {
-                                                source : "qrc:/PhotoAlbum/Resources/previous.png"
-                                                anchors.fill: parent
-                                            }
-                                        }
-                                    }
+                            Image
+                            {
+                                source : "qrc:/PhotoAlbum/Resources/previous.png"
+                                anchors.fill: parent
+                            }
+                        }
+                    }
 
                     onClicked:
                     {
@@ -144,25 +136,25 @@ Item
 
                     style:
                         ButtonStyle {
-                                        background: Rectangle {
-                                            implicitWidth: 50
-                                            implicitHeight: 50
+                        background: Rectangle {
+                            implicitWidth: 50
+                            implicitHeight: 50
 
-                                            color : control.pressed ? "#EEEEEE" : "#00000000"
-                                            radius: 4
+                            color : control.pressed ? "#EEEEEE" : "#00000000"
+                            radius: 4
 
-                                            Image
-                                            {
-                                                source : "qrc:/PhotoAlbum/Resources/next.png"
-                                                anchors.fill: parent
-                                            }
-                                        }
-                                    }
+                            Image
+                            {
+                                source : "qrc:/PhotoAlbum/Resources/next.png"
+                                anchors.fill: parent
+                            }
+                        }
+                    }
 
                     onClicked:
                     {
                         if ( listView.currentIndex + 1 <  listView.model.count  )
-                             listView.currentIndex = listView.currentIndex + 1
+                            listView.currentIndex = listView.currentIndex + 1
 
                     }
                 }
@@ -189,17 +181,39 @@ Item
             Layout.fillHeight : true
             Layout.fillWidth : true
 
-            Keys.onPressed:
+            CheckBox
             {
-                console.log(">> key pressed ")
+                id : selectUnselect
+
+                height : 10
+                width : 30
+
+                anchors.verticalCenter: slider.verticalCenter
+                anchors.left    : parent.left
+                anchors.leftMargin    : 5
+                anchors.right   : parent.right
+
+                style : CheckBoxStyle {}
+
+                onCheckedChanged:
+                {
+
+                    Tools.forEachInObjectList( listView.model, function(file)
+                    {
+                        file.cast.isSelected = checked;
+                    })
+                }
             }
 
             Slider
             {
                 id              : slider
                 anchors.top     : parent.top
+                anchors.topMargin : 5
                 anchors.left    : parent.left
+                anchors.leftMargin : 30
                 anchors.right   : parent.right
+                anchors.rightMargin : 5
 
                 height: 30
 
@@ -218,12 +232,12 @@ Item
             {
 
                 anchors.top     : slider.bottom
-                anchors.left    : parent.left
-                anchors.right   : parent.right
+                anchors.left    : selectUnselect.left
+                anchors.right   : slider.right
                 anchors.bottom  : parent.bottom
 
 
-               // ListView
+                // ListView
                 GridView
                 {
 
@@ -245,7 +259,15 @@ Item
 
                     onCurrentIndexChanged:
                     {
-                        preview.source =    documentFolder.getUrl(model.get(currentIndex));
+                        if (currentIndex >= 0)
+                        {
+                            preview.source =    documentFolder.getUrl(model.get(currentIndex));
+                        }
+                        else
+                        {
+                            preview.source = "";
+                        }
+
                     }
 
                     highlight: highlight
@@ -263,11 +285,6 @@ Item
                     cellWidth : 150 * slider.value + 10
 
                     keyNavigationWraps : true
-
-                    Keys.onPressed:
-                    {
-                        console.log(">> key pressed ")
-                    }
 
                     delegate : AlbumListViewDelegate { gridView : listView; width: 150 * slider.value;     height: 150 * slider.value;}
                 }

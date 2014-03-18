@@ -29,12 +29,12 @@ Item
 
     property Item gridView : null
 
+//    property bool selectedByAll : false
 
-    Keys.onPressed:
-    {
-        console.log(">> key pressed ")
-    }
-
+//    onSelectedByAllChanged:
+//    {
+//        checkBox.checked = selectedByAll
+//    }
 
     Image
     {
@@ -49,12 +49,6 @@ Item
 
         sourceSize.width: 100
 
-        Keys.onPressed:
-        {
-            console.log(">> key pressed ")
-        }
-
-
         MouseArea
         {
             anchors.fill: parent
@@ -66,8 +60,17 @@ Item
         }
     }
 
+    Component.onCompleted:
+    {
+        model.cast.isSelectedChanged.connect(function () {
+            checkBox.checked = model.cast.isSelected;
+        })
+    }
+
+
     CheckBox
     {
+        id : checkBox
         anchors.top : parent.top
         anchors.left : parent.left
         anchors.topMargin : 2

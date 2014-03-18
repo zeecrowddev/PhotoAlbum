@@ -147,10 +147,10 @@ Zc.AppView
                     if ( o.action === "deleted" )
                     {
                         documentFolder.removeFileDescriptor(o.fileName)
-                        if (o.sender !== mainView.context.nickname)
-                        {
-                            documentFolder.removeLocalFile(o.fileName)
-                        }
+//                        if (o.sender !== mainView.context.nickname)
+//                        {
+//                            documentFolder.removeLocalFile(o.fileName)
+//                        }
                     }
                     else if (o.action === "added")
                     {
@@ -201,9 +201,6 @@ Zc.AppView
                         documentFolder.removeFileDescriptor(x);
                     })
 
-
-                    console.log(">>>>>> on Completed")
-
                     loader.item.setModel(documentFolder.files);
                     splashScreenId.height = 0;
                     splashScreenId.width = 0;
@@ -252,14 +249,8 @@ Zc.AppView
 
         onStarted:
         {
-            console.log(">> onStarted")
-
             documentFolder.ensureLocalPathExists();
-            documentFolder.ensureLocalPathExists(".thumb/");
             documentFolder.ensureLocalPathExists(".upload/");
-
-            console.log(">> documentFolder.loadRemoteFiles(documentFolderQueryStatus);")
-
             documentFolder.loadRemoteFiles(documentFolderQueryStatus);
         }
     }
@@ -334,13 +325,6 @@ Zc.AppView
 
             Layout.fillWidth : true
             Layout.fillHeight : true
-
-            Keys.onPressed:
-            {
-                console.log(">> key pressed ")
-            }
-
-
         }
 
 
@@ -393,8 +377,6 @@ Zc.AppView
     function putFilesOnLocalDrive(folder)
     {
         openUploadView()
-
-        console.log(">> putFilesOnLocalDrive " + folder)
 
         Tools.forEachInObjectList( documentFolder.files, function(x)
         {
@@ -508,11 +490,4 @@ Zc.AppView
         }
 
     }
-
-    Keys.onPressed:
-    {
-        console.log(">> key pressed ")
-    }
-
-
 }

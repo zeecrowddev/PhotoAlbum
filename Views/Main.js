@@ -45,14 +45,8 @@ function nextDownload()
         var file = filesToDownload.pop();
         setPropertyinListModel(uploadingDownloadingFiles,"status","Downloading",
                                function (x) {
-
-                                   console.log(">>> search 1 " + x)
-                                   console.log(">>> search 2 " + x.name)
-
                                    return x.name === file.descriptor.name }
                                );
-
-        console.log(">> call downloadFileTo " + file.cast + " "  + file.path)
 
         documentFolder.downloadFileTo(file.descriptor.cast,file.path)
     }
