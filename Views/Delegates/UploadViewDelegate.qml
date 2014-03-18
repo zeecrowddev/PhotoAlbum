@@ -18,8 +18,9 @@
 ** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 2.0
-import QtQuick.Controls 1.0
+import QtQuick 2.2
+import QtQuick.Controls 1.1
+import QtQuick.Controls.Styles 1.1
 
 import "../Tools.js" as Tools
 
@@ -103,6 +104,8 @@ Rectangle
         minimumValue: 0
         maximumValue: 100
         value       : progress
+
+        style : ProgressBarStyle {}
     }
 
 }

@@ -59,21 +59,11 @@ Zc.AppView
             {
                 mainView.state = "putOnCloud"
                 fileDialog.selectMultiple = true;
+                fileDialog.nameFilters = [ "Image files (*.jpg *.png *.gif *.png *.tiff)", "All files (*)" ]
                 fileDialog.selectFolder = false
                 fileDialog.open()
             }
         }
-        //        ,
-        //        Action {
-        //            id: exportAction
-        //            shortcut: "Ctrl+E"
-        //            iconSource: "qrc:/PhotoAlbum/Resources/folder.png"
-        //            tooltip : "Open Local Folder"
-        //            onTriggered:
-        //            {
-        //                documentFolder.openLocalPath();
-        //            }
-        //        }
         ,
         Action {
             id: deleteAction
@@ -83,6 +73,21 @@ Zc.AppView
             onTriggered:
             {
                 mainView.deleteSelectedFiles();
+            }
+        }
+        ,
+        Action {
+            id: exportAction
+            shortcut: "Ctrl+E"
+            iconSource: "qrc:/PhotoAlbum/Resources/import.png"
+            tooltip : "Download pictures"
+            onTriggered:
+            {
+                mainView.state = "putOnLocalDrive"
+                fileDialog.selectMultiple = false;
+                fileDialog.nameFilters = ""
+                fileDialog.selectFolder = true
+                fileDialog.open()
             }
         }
         ////        ,
@@ -214,7 +219,7 @@ Zc.AppView
                     var fileDescriptor = Presenter.instance.fileDescriptorToUpload[fileName];
 
 
-                    Tools.setPropertyinListModel(uploadingFiles,"status","Uploading",function (x) { return x.name === fileName });
+                    Tools.setPropertyinListModel(uploadingDownloadingFiles,"status","Uploading",function (x) { return x.name === fileName });
                     Presenter.instance.decrementUploadRunning();
                     Presenter.instance.startUpload(fileDescriptor,"");
                     return;
@@ -230,20 +235,14 @@ Zc.AppView
                 closeUploadViewIfNeeded()
             }
 
-            //            onFileDownloaded :
-            //            {
-            //                /*
-            //                ** downloadFile to read it or to modify it
-            //                */
 
-            //                Presenter.instance.downloadFinished();
 
-            //                if (Presenter.instance.fileStatus[fileName] === "open")
-            //                {
-            //                   Presenter.instance.fileStatus[fileName] = null
-            //                   Qt.openUrlExternally(localFilePath)
-            //                }
-            //            }
+            onFileDownloaded :
+            {
+                Presenter.instance.downloadFinished(fileName);
+                // close the upload view
+                closeUploadViewIfNeeded()
+            }
 
             onFileDeleted :
             {
@@ -275,7 +274,7 @@ Zc.AppView
 
     ListModel
     {
-        id : uploadingFiles
+        id : uploadingDownloadingFiles
     }
 
 
@@ -286,7 +285,7 @@ Zc.AppView
 
     function closeUploadViewIfNeeded()
     {
-        if (uploadingFiles.count === 0)
+        if (uploadingDownloadingFiles.count === 0)
         {
             loaderUploadView.height = 0
         }
@@ -355,7 +354,7 @@ Zc.AppView
 
             onSourceChanged:
             {
-                item.setModel(uploadingFiles);
+                item.setModel(uploadingDownloadingFiles);
             }
         }
     }
@@ -368,6 +367,8 @@ Zc.AppView
         openUploadView()
 
         var fds = [];
+
+
         for ( var i = 0 ; i < fileUrls.length ; i ++)
         {
             var fd = documentFolder.createFileDescriptorFromFile(fileUrls[i]);
@@ -389,16 +390,38 @@ Zc.AppView
         });
     }
 
+    function putFilesOnLocalDrive(folder)
+    {
+        openUploadView()
+
+        console.log(">> putFilesOnLocalDrive " + folder)
+
+        Tools.forEachInObjectList( documentFolder.files, function(x)
+        {
+            if (x.cast.isSelected)
+            {
+                 Presenter.instance.startDownload(x.cast,folder);
+            }
+        })
+
+    }
+
 
     FileDialog
     {
         id: fileDialog
-        nameFilters: [ "Image files (*.jpg *.png *.gif *.png *.tiff)", "All files (*)" ]
+        nameFilters: state === "putOnCloud" ? [ "Image files (*.jpg *.png *.gif *.png *.tiff)", "All files (*)" ] : ""
+        selectFolder: state === "putOnLocalDrive" ? true : false
+
         onAccepted:
         {
-            if ( state == "putOnCloud" )
+            if ( state === "putOnCloud" )
             {
                 putFilesOnTheCloud(fileDialog.fileUrls);
+            }
+            else if (state === "putOnLocalDrive")
+            {
+                putFilesOnLocalDrive(fileDialog.folder);
             }
         }
     }

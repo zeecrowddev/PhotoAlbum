@@ -25,6 +25,7 @@ var instance = {}
 instance.fileStatus = {}
 
 instance.fileDescriptorToUpload = {};
+instance.fileDescriptorToDownload = {};
 
 var maxNbrDomwnload = 5;
 var maxNbrUpload = 5;
@@ -39,9 +40,21 @@ function nextDownload()
 {
     if (filesToDownload.length > 0)
     {
-        downloadRunning++;
+        instance.incrementDownloadRunning()
+
         var file = filesToDownload.pop();
-        documentFolder.downloadFile(file.cast)
+        setPropertyinListModel(uploadingDownloadingFiles,"status","Downloading",
+                               function (x) {
+
+                                   console.log(">>> search 1 " + x)
+                                   console.log(">>> search 2 " + x.name)
+
+                                   return x.name === file.descriptor.name }
+                               );
+
+        console.log(">> call downloadFileTo " + file.cast + " "  + file.path)
+
+        documentFolder.downloadFileTo(file.descriptor.cast,file.path)
     }
 }
 
@@ -60,7 +73,7 @@ function nextUpload()
         }
         else
         {
-            setPropertyinListModel(uploadingFiles,"status","Uploading",function (x) { return x.name === file.descriptor.name });
+            setPropertyinListModel(uploadingDownloadingFiles,"status","Uploading",function (x) { return x.name === file.descriptor.name });
             documentFolder.uploadFile(file.descriptor,".upload/" + file.descriptor.name)
         }
     }
@@ -76,9 +89,53 @@ instance.decrementUploadRunning = function()
     uploadRunning = uploadRunning - 1
 }
 
-instance.startDownload = function(file)
+instance.incrementDownloadRunning = function()
 {
-    filesToDownload.push(file)
+    downloadRunning = downloadRunning + 1
+}
+
+instance.decrementDownloadRunning = function()
+{
+    downloadRunning = downloadRunning - 1
+}
+
+
+instance.startDownload = function(file,path)
+{
+    var fd = {}
+    fd.descriptor = file;
+    fd.path = path
+
+    filesToDownload.push(fd)
+
+    /*
+    ** uploadingFiles contain all progress ulpoading files
+    */
+    if ( instance.fileDescriptorToDownload[file.name] === null || instance.fileDescriptorToDownload[file.name] === undefined)
+    {
+        instance.fileDescriptorToDownload[file.name] = file
+
+        /*
+        ** to now the state of the progress
+        */
+        file.queryProgressChanged.connect(function(){ updateQueryProgress(file.queryProgress,file.name) });
+    }
+
+
+    var found = findInListModel(uploadingDownloadingFiles, function(x) {return x.name === file.name} )
+
+    if (found === null)
+    {
+        uploadingDownloadingFiles.append( { "name"  : file.name,
+                                 "action" : "Download",
+                                 "progress" : 0,
+                                 "status" : "Waiting",
+                                 "message" : "",
+                                 "localPath" : path,
+                                  "validated" : false
+                          })
+    }
+
     if (downloadRunning < maxNbrDomwnload)
     {
         nextDownload();
@@ -107,11 +164,11 @@ instance.startUpload = function(file,path)
         file.queryProgressChanged.connect(function(){ updateQueryProgress(file.queryProgress,file.name) });
     }
 
-    var found = findInListModel(uploadingFiles, function(x) {return x.name === file.name} )
+    var found = findInListModel(uploadingDownloadingFiles, function(x) {return x.name === file.name} )
 
     if (found === null)
     {
-        uploadingFiles.append( { "name"  : file.name,
+        uploadingDownloadingFiles.append( { "name"  : file.name,
                                  "action" : "Upload",
                                  "progress" : 0,
                                  "status" : "Waiting",
@@ -122,7 +179,7 @@ instance.startUpload = function(file,path)
     }
     else
     {
-        setPropertyinListModel(uploadingFiles,"localPath",path,function (x) { return x.name === file.name });
+        setPropertyinListModel(uploadingDownloadingFiles,"localPath",path,function (x) { return x.name === file.name });
 
         // TO DO : check override filename
     }
@@ -135,8 +192,10 @@ instance.startUpload = function(file,path)
 
 function updateQueryProgress(progress, fileName)
 {
-    setPropertyinListModel(uploadingFiles,"progress",progress,function (x) { return x.name === fileName });
+    setPropertyinListModel(uploadingDownloadingFiles,"progress",progress,function (x) { return x.name === fileName });
 }
+
+
 
 /*
 ** Upload is finished
@@ -156,14 +215,17 @@ instance.uploadFinished = function(fileName,notify)
             notifySender.sendMessage("","{ \"sender\" : \"" + mainView.context.nickname + "\", \"action\" : \"added\" , \"fileName\" : \"" + fileName + "\" , \"size\" : " +  fileDescriptor.size + " , \"lastModified\" : \"" + fileDescriptor.timeStamp + "\" }");
     }
     instance.fileDescriptorToUpload[fileName] = null
-    removeInListModel(uploadingFiles,function (x) { return x.name === fileName} );
+    removeInListModel(uploadingDownloadingFiles,function (x) { return x.name === fileName} );
     instance.decrementUploadRunning();
     nextUpload();
 }
 
-instance.downloadFinished = function()
+instance.downloadFinished = function(fileName)
 {
-    downloadRunning--;
+    var fileDescriptor = instance.fileDescriptorToDownload[fileName];
+    instance.fileDescriptorToDownload[fileName] = null
+    removeInListModel(uploadingDownloadingFiles,function (x) { return x.name === fileName} );
+    instance.decrementDownloadRunning();
     nextDownload();
 }
 
