@@ -121,6 +121,13 @@ Zc.AppView
         id : appNotification
     }
 
+    onIsCurrentViewChanged :
+    {
+        if (isCurrentView == true)
+        {
+            appNotification.resetNotification();
+        }
+    }
 
     Zc.CrowdActivity
     {
@@ -147,10 +154,6 @@ Zc.AppView
                     if ( o.action === "deleted" )
                     {
                         documentFolder.removeFileDescriptor(o.fileName)
-//                        if (o.sender !== mainView.context.nickname)
-//                        {
-//                            documentFolder.removeLocalFile(o.fileName)
-//                        }
                     }
                     else if (o.action === "added")
                     {

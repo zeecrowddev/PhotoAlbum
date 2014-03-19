@@ -29,13 +29,6 @@ Item
 
     property Item gridView : null
 
-//    property bool selectedByAll : false
-
-//    onSelectedByAllChanged:
-//    {
-//        checkBox.checked = selectedByAll
-//    }
-
     Image
     {
         id : image

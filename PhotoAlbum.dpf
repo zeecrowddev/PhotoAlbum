@@ -110,16 +110,6 @@
             </QtResourceFile>
           </Item>
           <Item Template="QtResourceFile">
-            <QtResourceFile FileName="tile.png">
-              <Properties>
-                <BuildAction value="Compile" />
-                <Locale value="" />
-                <Alias value="" />
-              </Properties>
-              <Items />
-            </QtResourceFile>
-          </Item>
-          <Item Template="QtResourceFile">
             <QtResourceFile FileName="next.png">
               <Properties>
                 <BuildAction value="Compile" />
@@ -133,6 +123,18 @@
             <QtResourceFile FileName="previous.png">
               <Properties>
                 <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="tile.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
               </Properties>
               <Items />
             </QtResourceFile>
@@ -249,6 +251,14 @@
           <CopyToOutputDirectory value="OnlyIfNewer" />
           <CustomTool value="" />
           <Locale value="" />
+        </Properties>
+        <Items />
+      </QtResourceFile>
+    </Item>
+    <Item Template="QtResourceFile">
+      <QtResourceFile FileName="PhotoAlbum.zeeapmanifest">
+        <Properties>
+          <BuildAction value="Compile" />
         </Properties>
         <Items />
       </QtResourceFile>

@@ -47,6 +47,19 @@ Item
         preview.source = source;
     }
 
+    function showPreview()
+    {
+        if (previewItem.height === 0)
+        {
+            previewItem.height = parent.height * 2 / 3
+        }
+    }
+
+    function closePreview()
+    {
+        previewItem.height = 0;
+    }
+
     signal clean();
 
     SplitView
@@ -55,21 +68,12 @@ Item
 
         orientation: Qt.Vertical
 
-        //        Component
-        //        {
-        //            id : handleDelegateHorizontal
-        //            Rectangle
-        //            {
-        //                width : 10
-        //                color :  styleData.hovered ? "grey" :  "lightgrey"
-        //            }
-        //        }
-
-
         handleDelegate : handleDelegateVertical
 
         Item
         {
+            id : previewItem
+
             height : 0
 
             Image
@@ -261,10 +265,12 @@ Item
                     {
                         if (currentIndex >= 0)
                         {
+                            showPreview();
                             preview.source =    documentFolder.getUrl(model.get(currentIndex));
                         }
                         else
                         {
+                            closePreview();
                             preview.source = "";
                         }
 

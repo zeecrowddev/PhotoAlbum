@@ -63,7 +63,7 @@ function nextUpload()
 
         if (file.path !== "" && file.path !== null && file.path !== undefined)
         {
-            documentFolder.importFileToLocalFolder(file.descriptor,file.path,".upload")
+            documentFolder.importImageToLocalFolder(file.descriptor,file.path,1024,1024,"",".upload")
         }
         else
         {
