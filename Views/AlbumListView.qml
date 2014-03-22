@@ -31,11 +31,14 @@ import "Tools.js" as Tools
 
 Item
 {
+    id : albumListView
 
     focus : true
 
     anchors.fill: parent
 
+    state : "Consultation"
+    property string followingNickname : ""
 
     function setModel(model)
     {
@@ -46,6 +49,25 @@ Item
     {
         preview.source = source;
     }
+
+    function setCurrentIndex(source)
+    {
+        var index = Tools.getIndexInListModel(documentFolder.files, function (x){
+                return documentFolder.getUrl(x.cast) === source;
+        });
+
+        if (index === -1)
+            return;
+
+        if (listView.model === null)
+            return;
+
+        if (index >= listView.model.count)
+            return;
+
+        listView.currentIndex = index;
+    }
+
 
     function showPreview()
     {
@@ -94,9 +116,65 @@ Item
 
             Row
             {
+                width : 210
+                height : 50
+                spacing: 10
+
+                visible: albumListView.state == "Following"
+
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 5
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                Button
+                {
+                    id : stopFollow
+
+                    width : 50
+                    height : 50
+
+                    style:
+                        ButtonStyle {
+                        background: Rectangle {
+                            implicitWidth: 30
+                            implicitHeight: 30
+
+                            color : control.pressed ? "#EEEEEE" : "#00000000"
+                            radius: 4
+
+                            Image
+                            {
+                                source : "qrc:/PhotoAlbum/Resources/close.png"
+                                anchors.fill: parent
+                            }
+                        }
+                    }
+
+                    onClicked:
+                    {
+                        albumListView.state = "Consultation"
+                        albumListView.followingNickname = ""
+                    }
+                }
+
+                Label
+                {
+                    width : 100
+                    anchors.verticalCenter: stopFollow.verticalCenter
+                    text : "Following : " + albumListView.followingNickname
+                    font.pixelSize: 16
+                }
+
+
+            }
+
+            Row
+            {
                 width : 110
                 height : 50
                 spacing: 10
+
+                visible: albumListView.state == "Consultation"
 
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 5
@@ -128,7 +206,7 @@ Item
                     onClicked:
                     {
                         if (listView.currentIndex > 0 )
-                            listView.currentIndex = listView.currentIndex - 1
+                            listView.currentIndex = listView.currentIndex - 1;
                     }
                 }
 
@@ -263,6 +341,8 @@ Item
 
                     onCurrentIndexChanged:
                     {
+                        var oldSource = preview.source;
+
                         if (currentIndex >= 0)
                         {
                             showPreview();
@@ -274,6 +354,10 @@ Item
                             preview.source = "";
                         }
 
+                        if (oldSource !== preview.source)
+                        {
+                            participantPreview.setItem(mainView.context.nickname,preview.source)
+                        }
                     }
 
                     highlight: highlight
@@ -292,7 +376,14 @@ Item
 
                     keyNavigationWraps : true
 
-                    delegate : AlbumListViewDelegate { gridView : listView; width: 150 * slider.value;     height: 150 * slider.value;}
+                    delegate : AlbumListViewDelegate {
+                        width: 150 * slider.value;     height: 150 * slider.value;
+                        onClicked :
+                        {
+                            if (albumListView.state === "Consultation")
+                                listView.currentIndex = index;
+                        }
+                    }
                 }
             }
         }

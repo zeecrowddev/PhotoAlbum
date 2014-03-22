@@ -38,6 +38,23 @@ Zc.AppView
 
     anchors.fill : parent
 
+    participantMenuActions : [
+        Action {
+            id: test
+            shortcut: "Ctrl+I"
+            iconSource: "qrc:/PhotoAlbum/Resources/follow.png"
+            tooltip : "Put pictures on the cloud"
+            onTriggered:
+            {
+                loader.item.state = "Following"
+                loader.item.followingNickname = source.nickName;
+                var source = participantPreview.getItem(source.nickName,"");
+                loader.item.setCurrentIndex(source);
+            }
+        }
+    ]
+
+
     toolBarActions : [
         Action {
             id: closeAction
@@ -90,29 +107,6 @@ Zc.AppView
                 fileDialog.open()
             }
         }
-        ////        ,
-        ////        Action {
-        ////            id: refreshAction
-        ////            shortcut: "F5"
-        ////            iconSource: "qrc:/PhotoAlbum/Resources/updates.png"
-        ////            tooltip : "Synchronize all\nselected files"
-        ////            onTriggered:
-        ////            {
-        ////            //    mainView.synchronizeSelectedFiles();
-        ////            }
-        ////        }
-        //        ,
-        //        Action {
-        //            id: iconAction
-        //            iconSource: "qrc:/PhotoAlbum/Resources/tile.png"
-        //            onTriggered:
-        //            {
-        ////               loader.item.clean()
-        ////               loader.source = "";
-        ////               loader.source = "FolderGridIconView.qml"
-        ////               loader.item.setModel(documentFolder.files);
-        //            }
-        //        }
     ]
 
 
@@ -132,6 +126,28 @@ Zc.AppView
     Zc.CrowdActivity
     {
         id : activity
+
+        Zc.CrowdActivityItems
+        {
+            id         : participantPreview
+            name       : "ParticipantPreview"
+            persistent : false
+
+            onItemChanged :
+            {
+                if (loader.item.state !== "Following")
+                    return;
+
+                if (loader.item.followingNickname !== idItem)
+                    return;
+
+                var source = participantPreview.getItem(idItem,"");
+
+
+                loader.item.setCurrentIndex(source);
+            }
+
+        }
 
         Zc.MessageListener
         {
@@ -188,22 +204,6 @@ Zc.AppView
 
                 onCompleted :
                 {
-                    var toBeDeleted = [];
-
-                    Tools.forEachInObjectList( documentFolder.files, function(file)
-                    {
-
-                        if (file.cast.status === "new")
-                        {
-                            toBeDeleted.push(file.cast.name);
-                        }
-                    })
-
-                    Tools.forEachInArray(toBeDeleted, function (x)
-                    {
-                        documentFolder.removeFileDescriptor(x);
-                    })
-
                     loader.item.setModel(documentFolder.files);
                     splashScreenId.height = 0;
                     splashScreenId.width = 0;
@@ -217,7 +217,6 @@ Zc.AppView
                 if (localFilePath.indexOf(".upload") !== -1)
                 {
                     var fileDescriptor = Presenter.instance.fileDescriptorToUpload[fileName];
-
 
                     Tools.setPropertyinListModel(uploadingDownloadingFiles,"status","Uploading",function (x) { return x.name === fileName });
                     Presenter.instance.decrementUploadRunning();
@@ -252,6 +251,7 @@ Zc.AppView
 
         onStarted:
         {
+            participantPreview.loadItems();
             documentFolder.ensureLocalPathExists();
             documentFolder.ensureLocalPathExists(".upload/");
             documentFolder.loadRemoteFiles(documentFolderQueryStatus);
@@ -418,13 +418,9 @@ Zc.AppView
 
     onClosed :
     {
+        participantPreview.removeItem(mainView.context.nickname);
         activity.stop();
     }
-
-    //    function openFile(file)
-    //    {
-    //        documentFolder.openFileWithDefaultApplication(file);
-    //    }
 
     function importFile(fileUrls)
     {

@@ -139,6 +139,14 @@
               <Items />
             </QtResourceFile>
           </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="follow.png">
+              <Properties>
+                <BuildAction value="Compile" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
         </Items>
       </QtResourceProjectFolder>
     </Item>

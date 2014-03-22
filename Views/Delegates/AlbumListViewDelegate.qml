@@ -27,7 +27,9 @@ Item
     width: 100
     height: 62
 
-    property Item gridView : null
+    id : delegateId
+
+    signal clicked (int index)
 
     Image
     {
@@ -48,7 +50,7 @@ Item
 
             onClicked:
             {
-                gridView.currentIndex = index
+                delegateId.clicked(index)
             }
         }
     }
