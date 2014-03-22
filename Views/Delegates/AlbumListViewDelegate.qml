@@ -31,6 +31,8 @@ Item
 
     signal clicked (int index)
 
+    property Item gridView : null
+
     Image
     {
         id : image
@@ -55,13 +57,28 @@ Item
         }
     }
 
-    Component.onCompleted:
+//    Component.onCompleted:
+//    {
+//        model.cast.isSelectedChanged.connect(function () {
+//            checkBox.checked = model.cast.isSelected;
+//        })
+//    }
+
+    function selectUnselect(val)
     {
-        model.cast.isSelectedChanged.connect(function () {
-            checkBox.checked = model.cast.isSelected;
-        })
+        checkBox.checked = val;
     }
 
+    Component.onCompleted :
+    {
+        gridView.onSelectedAllChanged.connect(selectUnselect);
+        checkBox.checked = model.cast.isSelected;
+    }
+
+    Component.onDestruction:
+    {
+        gridView.onSelectedAllChanged.disconnect(selectUnselect);
+    }
 
     CheckBox
     {

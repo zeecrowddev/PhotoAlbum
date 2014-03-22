@@ -4,7 +4,7 @@
     <a:ZeeapManifestMetaData>
       <a:ZeeapManifestMetaData.AppName>PhotoAlbum</a:ZeeapManifestMetaData.AppName>
       <a:ZeeapManifestMetaData.Author>ZeeCrowd</a:ZeeapManifestMetaData.Author>
-      <a:ZeeapManifestMetaData.Version>101</a:ZeeapManifestMetaData.Version>
+      <a:ZeeapManifestMetaData.Version>102</a:ZeeapManifestMetaData.Version>
       <a:ZeeapManifestMetaData.Url>htpp://</a:ZeeapManifestMetaData.Url>
       <a:ZeeapManifestMetaData.AppConfig>PhotoAlbum.cfg</a:ZeeapManifestMetaData.AppConfig>
     </a:ZeeapManifestMetaData>

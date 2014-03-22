@@ -54,7 +54,7 @@ Item
     function setCurrentIndex(source)
     {
         var index = Tools.getIndexInListModel(documentFolder.files, function (x){
-                return documentFolder.getUrl(x.cast) === source;
+            return documentFolder.getUrl(x.cast) === source;
         });
 
         if (index === -1)
@@ -298,13 +298,11 @@ Item
 
                 style : CheckBoxStyle {}
 
+
                 onCheckedChanged:
                 {
+                    listView.selectedAllChanged(checked);
 
-                    Tools.forEachInObjectList( listView.model, function(file)
-                    {
-                        file.cast.isSelected = checked;
-                    })
                 }
             }
 
@@ -343,6 +341,9 @@ Item
                 // ListView
                 GridView
                 {
+
+                    signal selectedAllChanged(bool val);
+
 
                     Component
                     {
@@ -398,6 +399,7 @@ Item
                     keyNavigationWraps : true
 
                     delegate : AlbumListViewDelegate {
+                        gridView: listView
                         width: 150 * slider.value;     height: 150 * slider.value;
                         onClicked :
                         {
