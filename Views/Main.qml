@@ -48,6 +48,9 @@ Zc.AppView
             {
                 loader.item.state = "Following"
                 loader.item.followingNickname = source.nickName;
+            
+                loader.item.iconFollowingNickname = activity.getParticipantImageUrl(source.nickName)
+
                 var source = participantPreview.getItem(source.nickName,"");
                 loader.item.setCurrentIndex(source);
             }

@@ -39,6 +39,7 @@ Item
 
     state : "Consultation"
     property string followingNickname : ""
+    property string iconFollowingNickname : ""
 
     function setModel(model)
     {
@@ -154,6 +155,26 @@ Item
                     {
                         albumListView.state = "Consultation"
                         albumListView.followingNickname = ""
+                    }
+                }
+
+                Image
+                {
+                    id : followIconUser
+                    width : 40
+                    height : 40
+
+                    fillMode: Image.PreserveAspectFit
+                    anchors.verticalCenter: stopFollow.verticalCenter
+
+                    source : iconFollowingNickname
+
+                    onStatusChanged:
+                    {
+                        if (status === Image.Error)
+                        {
+                            source = "qrc:/Crowd.Core/Qml/Ressources/Pictures/DefaultUser.png"
+                        }
                     }
                 }
 
