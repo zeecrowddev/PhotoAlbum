@@ -126,6 +126,8 @@ Zc.AppView
         }
     }
 
+
+
     Zc.CrowdActivity
     {
         id : activity
@@ -252,6 +254,25 @@ Zc.AppView
             }
         }
 
+        Zc.ChatMessageSender
+        {
+            id      : senderChat
+            subject : "Main"
+        }
+
+        Zc.ChatMessageListener
+        {
+            id      : listenerChat
+            subject : "*"
+
+            allowGrouping : false
+
+            onMessageChangedOrAdded :
+            {
+                appNotification.blink();
+            }
+        }
+
         onStarted:
         {
             participantPreview.loadItems();
@@ -297,23 +318,49 @@ Zc.AppView
         }
     }
 
+    Component
+    {
+        id : handleDelegateVertical
+
+        Rectangle
+        {
+            height : 3
+            color :  styleData.hovered ? "grey" :  "lightgrey"
+
+            Rectangle
+            {
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                height : 1
+                color :  "grey"
+            }
+        }
+    }
+
+    Component
+    {
+        id : handleDelegateHorizontal
+
+        Rectangle
+        {
+            width : 3
+            color :  styleData.hovered ? "grey" :  "lightgrey"
+
+            Rectangle
+            {
+                height: parent.height
+                anchors.horizontalCenter: parent.horizontalCenter
+                width : 1
+                color :  "grey"
+            }
+        }
+    }
+
 
     SplitView
     {
         anchors.fill: parent
         orientation: Qt.Vertical
-
-        Component
-        {
-            id : handleDelegateVertical
-
-            Rectangle
-            {
-                height : 10
-                color :  styleData.hovered ? "grey" :  "lightgrey"
-
-            }
-        }
 
 
         handleDelegate : handleDelegateVertical

@@ -90,6 +90,16 @@
             </QtResourceFile>
           </Item>
           <Item Template="QtResourceFile">
+            <QtResourceFile FileName="follow.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
             <QtResourceFile FileName="icon.png">
               <Properties>
                 <BuildAction value="Compile" />
@@ -139,14 +149,6 @@
               <Items />
             </QtResourceFile>
           </Item>
-          <Item Template="QtResourceFile">
-            <QtResourceFile FileName="follow.png">
-              <Properties>
-                <BuildAction value="Compile" />
-              </Properties>
-              <Items />
-            </QtResourceFile>
-          </Item>
         </Items>
       </QtResourceProjectFolder>
     </Item>
@@ -170,6 +172,16 @@
                 </Item>
                 <Item Template="QtResourceFile">
                   <QtResourceFile FileName="UploadViewDelegate.qml">
+                    <Properties>
+                      <BuildAction value="Compile" />
+                      <Locale value="" />
+                      <Alias value="" />
+                    </Properties>
+                    <Items />
+                  </QtResourceFile>
+                </Item>
+                <Item Template="QtResourceFile">
+                  <QtResourceFile FileName="ChatDelegate.qml">
                     <Properties>
                       <BuildAction value="Compile" />
                       <Locale value="" />
@@ -247,6 +259,14 @@
               <Items />
             </QtResourceFile>
           </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="InputMessageWidget.qml">
+              <Properties>
+                <BuildAction value="Compile" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
         </Items>
       </QtResourceProjectFolder>
     </Item>
@@ -267,6 +287,8 @@
       <QtResourceFile FileName="PhotoAlbum.zeeapmanifest">
         <Properties>
           <BuildAction value="Compile" />
+          <Locale value="" />
+          <Alias value="" />
         </Properties>
         <Items />
       </QtResourceFile>

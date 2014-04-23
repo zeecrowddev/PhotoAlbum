@@ -33,8 +33,8 @@
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1003"
-     inkscape:window-x="-9"
-     inkscape:window-y="-9"
+     inkscape:window-x="-32000"
+     inkscape:window-y="-32000"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -59,7 +59,7 @@
        height="50"
        x="156.45204"
        y="657.51807"
-       inkscape:export-filename="D:\dev\ZC\Crowd\Source\ZcCloud\Resources\bin.png"
+       inkscape:export-filename="C:\github\PhotoAlbum\Resources\followpng.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <image
@@ -102,6 +102,9 @@ ohJUiEpQISpBhagEFaISVIhKUCEqQYWoBBWiElSISlAhKkGFqAQVohJUiEpQISpBhagEFaISVIhK
 UCEqQYWoBBWiElT4DVCSwnNLYAQDAAAAAElFTkSuQmCC
 "
        height="41.930817"
-       width="47.991192" />
+       width="47.991192"
+       inkscape:export-filename="C:\github\PhotoAlbum\Resources\followpng.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>
