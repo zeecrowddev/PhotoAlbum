@@ -91,8 +91,6 @@ Rectangle
 
             textZone.url = o.viewUrl;
 
-            console.log(">> textZone.url " + textZone.url)
-
             var ligneHeight =  textEdit.lineCount * 17
 
             var finalHeight = 28 + ligneHeight;
@@ -103,7 +101,6 @@ Rectangle
             textZone.height = finalHeight;
             chatDelegate.height = finalHeight;
         }
-
 
         Component.onCompleted:
         {
