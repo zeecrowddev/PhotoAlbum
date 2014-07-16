@@ -1,27 +1,28 @@
-/*
-** Copyright (c) 2014, Jabber Bees
-** All rights reserved.
-**
-** Redistribution and use in source and binary forms, with or without modification,
-** are permitted provided that the following conditions are met:
-**
-** 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-**
-** 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer
-** in the documentation and/or other materials provided with the distribution.
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-** INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-** IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+/**
+* Copyright (c) 2010-2014 "Jabber Bees"
+*
+* This file is part of the PhotoAlbum application for the Zeecrowd platform.
+*
+* Zeecrowd is an online collaboration platform [http://www.zeecrowd.com]
+*
+* ChatTabs is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import QtQuick 2.0
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.0
-import QtQuick.Dialogs 1.0
+import QtQuick.Controls 1.2
+import QtQuick.Layouts 1.1
+import QtQuick.Dialogs 1.1
 
 
 import "./Delegates"
@@ -48,7 +49,7 @@ Zc.AppView
             {
                 loader.item.state = "Following"
                 loader.item.followingNickname = source.nickName;
-            
+
                 loader.item.iconFollowingNickname = activity.getParticipantImageUrl(source.nickName)
 
                 var source = participantPreview.getItem(source.nickName,"");
@@ -126,12 +127,64 @@ Zc.AppView
         }
     }
 
+    function loadComments(url)
+    {
+
+        // on ne sait jamais on cancel al requete précedente
+        getSharedResourceQueryStatus.cancel()
+
+        var name = sharedResource.getNameFromUrl(url)
+
+        getSharedResourceQueryStatus.content = url;
+
+        sharedResource.getText("comments/" + name  + "_txt",getSharedResourceQueryStatus);
+    }
+
+    function putComments(url,comment)
+    {
+
+        if (comment === "" || comment === null || comment === undefined)
+            return;
+
+          var result = {};
+        result.datas = [];
+
+
+        Tools.forEachInListModel(currentComments, function (x)
+        {  var elm = {}
+            elm.comment = x.comment
+            elm.who = x.who
+            elm.date = x.date
+            result.datas.push(elm);
+         })
+
+
+        var newElm = {}
+        newElm.who = mainView.context.nickname
+        newElm.comment = comment
+
+        newElm.date = new Date().getTime()
+        result.datas.unshift(newElm);
+        var toPut = JSON.stringify(result);
+
+        newElm.url = url.toString()
+        var toNotify = JSON.stringify(newElm)
+
+        var name = sharedResource.getNameFromUrl(url)
+
+        putSharedResourceQueryStatus.content = toNotify
+
+        sharedResource.putText("comments/" + name + "_txt",toPut,putSharedResourceQueryStatus);
+    }
 
 
     Zc.CrowdActivity
     {
         id : activity
 
+        /*
+        ** Pouyr pouvoire suivre ce que visualize un autre participant
+        */
         Zc.CrowdActivityItems
         {
             id         : participantPreview
@@ -154,6 +207,51 @@ Zc.AppView
 
         }
 
+        /*
+        ** Nombre de commetaires par image
+        */
+        Zc.CrowdActivityItems
+        {
+            id         : nbrComments
+            name       : "NumberComments"
+            persistent : true
+
+            Zc.QueryStatus
+            {
+                id : nbrCommentsQueryStatus
+
+                onCompleted :
+                {
+
+                    Tools.forEachInObjectList(documentFolder.files,function (x)
+                    {
+                        var value = nbrComments.getItem(x.name,"");
+                        if (value !== "")
+                        {
+                            x.cast.datas = value
+                        }
+
+                    });
+                }
+            }
+
+            onItemChanged :
+            {
+                var value = nbrComments.getItem(idItem,"");
+
+                var find = Tools.findInObjectList(documentFolder.files, function(x) { return x.name === idItem});
+
+                if (find !==null)
+                {
+                    find.cast.datas = value
+                }
+            }
+
+        }
+
+        /*
+        ** Notification d'ajout ou suppression d'images
+        */
         Zc.MessageListener
         {
             id      : notifyListener
@@ -193,10 +291,132 @@ Zc.AppView
             subject : "notify"
         }
 
+        /*
+        ** Notifiation des commentaires
+        */
+
+        Zc.MessageSender
+        {
+            id      : senderCommentNotify
+            subject : "Comment"
+        }
+
+        Zc.MessageListener
+        {
+            id      : listenerCommentNotify
+            subject : "Comment"
+
+            onMessageReceived :
+            {
+                var o = Tools.parseDatas(message.body);
+
+                if ( o.url !==null && o.url !== undefined )
+                {
+                    appNotification.blink();
+                    if (!mainView.isCurrentView)
+                    {
+                        appNotification.incrementNotification();
+                    }
+
+                    // pour l'instant on refait un Get ...
+                    // a optimiser ..
+                    if (o.url === loader.item.getPreviewSource())
+                    {
+                        loadComments(o.url)
+                    }
+                }
+            }
+        }
+
+        /*
+        ** Recuperation des commentaires
+        */
+        Zc.CrowdSharedResource
+        {
+            id   : sharedResource
+            name : "Comments"
+
+
+            Zc.StorageQueryStatus
+            {
+                id : getSharedResourceQueryStatus
+
+                onErrorOccured :
+                {
+                }
+
+                onCompleted :
+                {
+                    if (sender.content === null || sender.content === undefined || sender.content !== loader.item.getPreviewSource())
+                    {
+                        return;
+                    }
+
+
+                    var result = Tools.parseDatas(sender.text);
+
+                    currentComments.clear();
+
+                    if (result.datas !== null && result.datas !== undefined)
+                    {
+                        Tools.forEachInArray(result.datas , function (x) {
+
+                        if (x.comment === null || x.comment === undefined)
+                        {
+                            x.comment = ""
+                        }
+
+                        if (x.date === null || x.date === undefined || x.date === "")
+                        {
+                            x.date = 0;
+                        }
+
+                        currentComments.append({ "who" : x.who, "comment" : x.comment, "date" : x.date })});
+
+                        // voiture balai qui met le compteur à jour
+                        var name = sharedResource.getNameFromUrl(sender.content)
+                        nbrComments.setItem(name,result.datas.length);
+                    }
+
+                }
+            }
+
+            Zc.StorageQueryStatus
+            {
+                id : putSharedResourceQueryStatus
+
+                onErrorOccured :
+                {
+                    loader.item.stopWaiting();
+                }
+
+                onCompleted :
+                {
+                    loader.item.stopWaiting();
+
+                    var toNotify = sender.content;
+                    senderCommentNotify.sendMessage("",toNotify)
+
+                    // Apres avoir pushé le nouveau commentaire on
+                    // met le compteur d emessages à jour
+                    if (toNotify.url !== null && toNotify.url !== undefined || toNotify.url !== "")
+                    {
+                        var name = sharedResource.getNameFromUrl(url)
+                        nbrItem.setItem(name,result.datas.length);
+                    }
+
+                }
+
+            }
+        }
+
+        /*
+        ** les photos
+        */
         Zc.CrowdDocumentFolder
         {
             id   : documentFolder
-            name : "Test"
+            name : "Images"
             
             Zc.QueryStatus
             {
@@ -213,6 +433,9 @@ Zc.AppView
                     splashScreenId.height = 0;
                     splashScreenId.width = 0;
                     splashScreenId.visible = false;
+
+                    // recupération du nombre de commentaires
+                    nbrComments.loadItems(nbrCommentsQueryStatus)
                 }
             }
 
@@ -239,8 +462,6 @@ Zc.AppView
                 closeUploadViewIfNeeded()
             }
 
-
-
             onFileDownloaded :
             {
                 Presenter.instance.downloadFinished(fileName);
@@ -254,16 +475,21 @@ Zc.AppView
             }
         }
 
+
+        /*
+        ** Le chat
+        */
         Zc.ChatMessageSender
         {
             id      : senderChat
-            subject : "Main"
+            subject : "Chat"
         }
 
         Zc.ChatMessageListener
         {
             id      : listenerChat
-            subject : "*"
+
+            subject : "Chat"
 
             allowGrouping : false
 
@@ -289,12 +515,17 @@ Zc.AppView
         height: parent.height
     }
 
-
     ListModel
     {
         id : uploadingDownloadingFiles
     }
 
+    property alias currentCommentsListModel : currentComments
+
+    ListModel
+    {
+        id : currentComments
+    }
 
     function setPreviewSource(source)
     {
@@ -308,7 +539,6 @@ Zc.AppView
             loaderUploadView.height = 0
         }
     }
-
 
     function openUploadView()
     {
@@ -341,21 +571,41 @@ Zc.AppView
     {
         id : handleDelegateHorizontal
 
-        Rectangle
+        Item
         {
-            width : 3
-            color :  styleData.hovered ? "grey" :  "lightgrey"
+            width : 15
 
             Rectangle
             {
-                height: parent.height
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
-                width : 1
-                color :  "grey"
+
+                width : 3
+                color :  styleData.hovered ? "grey" :  "lightgrey"
+
+                Rectangle
+                {
+                    height: parent.height
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width : 1
+                    color :  "grey"
+                }
+
+                Rectangle
+                {
+                    anchors.centerIn : parent
+                    width : 15
+                    height : 15
+                    radius : 2
+                    color :  "lightgrey"
+                    border.color: "black"
+                    border.width: 1
+                    opacity : 0.5
+                }
             }
         }
     }
-
 
     SplitView
     {
@@ -396,9 +646,6 @@ Zc.AppView
         }
     }
 
-
-
-
     function putFilesOnTheCloud(fileUrls)
     {
         openUploadView()
@@ -435,7 +682,7 @@ Zc.AppView
         {
             if (x.cast.isSelected)
             {
-                 Presenter.instance.startDownload(x.cast,folder);
+                Presenter.instance.startDownload(x.cast,folder);
             }
         })
 
@@ -517,6 +764,8 @@ Zc.AppView
             if (file.cast.isSelected)
             {
                 documentFolder.deleteFile(file);
+                sharedResource.deleteFile("comments/" + file.name + "_txt",null)
+                nbrComments.deleteItem(file.name);
             }
         })
     }

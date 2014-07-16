@@ -8,5 +8,6 @@ OTHER_FILES += \
     Views/Delegates/AlbumListViewDelegate.qml \
     Views/Delegates/UploadViewDelegate.qml \
     Views/Delegates/ChatDelegate.qml \
-    Views/InputMessageWidget.qml
+    Views/InputMessageWidget.qml \
+    Views/Delegates/CommentDelegate.qml
     

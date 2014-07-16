@@ -149,6 +149,36 @@
               <Items />
             </QtResourceFile>
           </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="cancel.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="plus.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="ok.png">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
         </Items>
       </QtResourceProjectFolder>
     </Item>
@@ -171,6 +201,16 @@
                   </QtResourceFile>
                 </Item>
                 <Item Template="QtResourceFile">
+                  <QtResourceFile FileName="ChatDelegate.qml">
+                    <Properties>
+                      <BuildAction value="Compile" />
+                      <Locale value="" />
+                      <Alias value="" />
+                    </Properties>
+                    <Items />
+                  </QtResourceFile>
+                </Item>
+                <Item Template="QtResourceFile">
                   <QtResourceFile FileName="UploadViewDelegate.qml">
                     <Properties>
                       <BuildAction value="Compile" />
@@ -181,11 +221,9 @@
                   </QtResourceFile>
                 </Item>
                 <Item Template="QtResourceFile">
-                  <QtResourceFile FileName="ChatDelegate.qml">
+                  <QtResourceFile FileName="CommentDelegate.qml">
                     <Properties>
                       <BuildAction value="Compile" />
-                      <Locale value="" />
-                      <Alias value="" />
                     </Properties>
                     <Items />
                   </QtResourceFile>
@@ -195,6 +233,16 @@
           </Item>
           <Item Template="QtResourceFile">
             <QtResourceFile FileName="AlbumListView.qml">
+              <Properties>
+                <BuildAction value="Compile" />
+                <Locale value="" />
+                <Alias value="" />
+              </Properties>
+              <Items />
+            </QtResourceFile>
+          </Item>
+          <Item Template="QtResourceFile">
+            <QtResourceFile FileName="InputMessageWidget.qml">
               <Properties>
                 <BuildAction value="Compile" />
                 <Locale value="" />
@@ -255,14 +303,6 @@
                 <BuildAction value="Compile" />
                 <Locale value="" />
                 <Alias value="" />
-              </Properties>
-              <Items />
-            </QtResourceFile>
-          </Item>
-          <Item Template="QtResourceFile">
-            <QtResourceFile FileName="InputMessageWidget.qml">
-              <Properties>
-                <BuildAction value="Compile" />
               </Properties>
               <Items />
             </QtResourceFile>

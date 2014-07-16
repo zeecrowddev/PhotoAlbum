@@ -1,0 +1,31 @@
+﻿<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<RCC>
+	<qresource prefix='/PhotoAlbum'>
+		<file>Packages\PhotoAlbumApplication.cfg</file>
+		<file>Resources\bin.png</file>
+		<file>Resources\cancel.png</file>
+		<file>Resources\close.png</file>
+		<file>Resources\export.png</file>
+		<file>Resources\folder.png</file>
+		<file>Resources\follow.png</file>
+		<file>Resources\icon.png</file>
+		<file>Resources\import.png</file>
+		<file>Resources\next.png</file>
+		<file>Resources\ok.png</file>
+		<file>Resources\plus.png</file>
+		<file>Resources\previous.png</file>
+		<file>Resources\tile.png</file>
+		<file>Views\Delegates\AlbumListViewDelegate.qml</file>
+		<file>Views\Delegates\ChatDelegate.qml</file>
+		<file>Views\Delegates\CommentDelegate.qml</file>
+		<file>Views\Delegates\UploadViewDelegate.qml</file>
+		<file>Views\AlbumListView.qml</file>
+		<file>Views\InputMessageWidget.qml</file>
+		<file>Views\Main.js</file>
+		<file>Views\Main.qml</file>
+		<file>Views\SplashScreen.qml</file>
+		<file>Views\Tools.js</file>
+		<file>Views\UploadStatusView.qml</file>
+		<file>PhotoAlbum.zeeapmanifest</file>
+	</qresource>
+</RCC>

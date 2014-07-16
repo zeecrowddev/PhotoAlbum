@@ -1,11 +1,11 @@
 /**
 * Copyright (c) 2010-2014 "Jabber Bees"
 *
-* This file is part of the WebApp application for the Zeecrowd platform.
+* This file is part of the PhotoAlbum application for the Zeecrowd platform.
 *
 * Zeecrowd is an online collaboration platform [http://www.zeecrowd.com]
 *
-* WebApp is free software: you can redistribute it and/or modify
+* ChatTabs is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
@@ -49,7 +49,7 @@ FocusScope
             rightMargin : 5
             leftMargin : 5
         }
-        color : input.focus ?  Qt.lighter("#ff6600") : "white"
+        color : /*input.focus ?*/  Qt.lighter("#ff6600") /*: "white"*/
 
         border.width: 1
         border.color: "black"

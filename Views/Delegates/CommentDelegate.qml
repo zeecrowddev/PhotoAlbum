@@ -27,16 +27,15 @@ import ZcClient 1.0 as Zc
 import "../Tools.js" as Tools
 
 
-Rectangle
+Item
 {
-    id : chatDelegate
+    id : commentDelegate
 
     property alias contactImageSource : contactImage.source
 
     height : 50
     width : parent.width
 
-    color : "white"
 
     /*
     ** Contact Image
@@ -82,14 +81,11 @@ Rectangle
         property string url : ""
 
 
-        function updateDelegate()
+        function updateDelegate(text)
         {
-            var o = Tools.parseDatas(body);
 
-            textEdit.text = o.text;
+            textEdit.text = text;
 
-
-            textZone.url = o.viewUrl;
 
             var ligneHeight =  textEdit.lineCount * 17
 
@@ -99,13 +95,12 @@ Rectangle
                 finalHeight = 70;
 
             textZone.height = finalHeight;
-            chatDelegate.height = finalHeight;
+            commentDelegate.height = finalHeight;
         }
 
         Component.onCompleted:
         {
-            updateDelegate();
-            chatView.goToEnd()
+            updateDelegate(model.comment);
         }
 
 
@@ -113,13 +108,12 @@ Rectangle
         Label
         {
             id                      : fromId
-            text                    : from
+            text                    : model.who
             color                   : "black"
             font.pixelSize          : appStyleId.baseTextHeigth
             anchors
             {
                 top             : parent.top
-                topMargin       : 2
                 left            : parent.left
                 leftMargin      : 5
             }
@@ -133,19 +127,31 @@ Rectangle
 
         Label
         {
+            function getDate(x)
+            {
+                if (x !== null && x !== undefined && x !== "")
+                {
+                    return new Date(parseInt(x)).toDateString();
+                }
+                return new Date(0).toDateString();
+            }
+
             id                      : timeStampId
-            text                    : timeStamp
+            text                    : getDate(model.date)
             font.pixelSize          : 10
             font.italic 			: true
             anchors
             {
                 top             : parent.top
-                horizontalCenter: parent.horizontalCenter
+                right           : parent.right
+                rightMargin     : 2
             }
             maximumLineCount        : 1
             elide                   : Text.ElideRight
             wrapMode                : Text.WrapAnywhere
             color                   : "gray"
+
+            horizontalAlignment: Text.AlignRight
         }
 
 
@@ -159,7 +165,7 @@ Rectangle
                 top        : fromId.bottom
                 left       : parent.left
                 leftMargin : 25
-                right      : viewImage.left
+                right      : parent.right
                 rightMargin: 5
                 bottom     : parent.bottom
             }
@@ -188,36 +194,16 @@ Rectangle
             }
 
         }
-
-        Image
-        {
-            id : viewImage
-
-            height: 50
-            width: 50
-            anchors.top : parent.top
-            anchors.topMargin : 2
-            anchors.right : parent.right
-            anchors.rightMargin : 2
-
-            source : textZone.url
-        }
-
-
-        Label
-        {
-            height : 20
-            width : 100
-            anchors.bottom: parent.bottom
-            anchors.left: textZone.right
-            anchors.leftMargin: - 30
-            text : "<a href=\" \">view</a>"
-
-            onLinkActivated:
-            {
-                preview.source = textZone.url
-            }
-        }
-
     }
+
+    Rectangle
+    {
+        height : 1
+        width : parent.width - 10
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        color : "grey"
+    }
+
 }
