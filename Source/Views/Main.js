@@ -202,7 +202,7 @@ instance.uploadFinished = function(fileName,notify)
 
     if (fileDescriptor !== null && fileDescriptor !== undefined)
     {
-        documentFolder.removeLocalFile(".upload\\" + fileDescriptor.name)
+        documentFolder.removeLocalFile(".upload/" + fileDescriptor.name)
         /*
         ** For example if it's a cancel : no notification for all users
         */
