@@ -146,7 +146,7 @@ Zc.AppView
         if (comment === "" || comment === null || comment === undefined)
             return;
 
-          var result = {};
+        var result = {};
         result.datas = [];
 
 
@@ -156,7 +156,7 @@ Zc.AppView
             elm.who = x.who
             elm.date = x.date
             result.datas.push(elm);
-         })
+        })
 
 
         var newElm = {}
@@ -173,6 +173,9 @@ Zc.AppView
         var name = sharedResource.getNameFromUrl(url)
 
         putSharedResourceQueryStatus.content = toNotify
+
+        putSharedResourceQueryStatus.url = url
+                putSharedResourceQueryStatus.newComment = comment;
 
         sharedResource.putText("comments/" + name + "_txt",toPut,putSharedResourceQueryStatus);
     }
@@ -361,17 +364,17 @@ Zc.AppView
                     {
                         Tools.forEachInArray(result.datas , function (x) {
 
-                        if (x.comment === null || x.comment === undefined)
-                        {
-                            x.comment = ""
-                        }
+                            if (x.comment === null || x.comment === undefined)
+                            {
+                                x.comment = ""
+                            }
 
-                        if (x.date === null || x.date === undefined || x.date === "")
-                        {
-                            x.date = 0;
-                        }
+                            if (x.date === null || x.date === undefined || x.date === "")
+                            {
+                                x.date = 0;
+                            }
 
-                        currentComments.append({ "who" : x.who, "comment" : x.comment, "date" : x.date })});
+                            currentComments.append({ "who" : x.who, "comment" : x.comment, "date" : x.date })});
 
                         // voiture balai qui met le compteur à jour
                         var name = sharedResource.getNameFromUrl(sender.content)
@@ -385,6 +388,9 @@ Zc.AppView
             {
                 id : putSharedResourceQueryStatus
 
+                property string newComment : ""
+                property string url : ""
+
                 onErrorOccured :
                 {
                     loader.item.stopWaiting();
@@ -397,6 +403,8 @@ Zc.AppView
                     var toNotify = sender.content;
                     senderCommentNotify.sendMessage("",toNotify)
 
+                    appNotification.logEvent(Zc.AppNotification.Add,"Photo Comment",newComment,url)
+
                     // Apres avoir pushé le nouveau commentaire on
                     // met le compteur d emessages à jour
                     if (toNotify.url !== null && toNotify.url !== undefined || toNotify.url !== "")
@@ -404,6 +412,8 @@ Zc.AppView
                         var name = sharedResource.getNameFromUrl(url)
                         nbrItem.setItem(name,result.datas.length);
                     }
+
+
 
                 }
 
@@ -430,6 +440,7 @@ Zc.AppView
                 onCompleted :
                 {
                     loader.item.setModel(documentFolder.files);
+
                     splashScreenId.height = 0;
                     splashScreenId.width = 0;
                     splashScreenId.visible = false;
@@ -455,6 +466,8 @@ Zc.AppView
 
             onFileUploaded :
             {
+
+                appNotification.logEvent(Zc.AppNotification.Add,"Photo","",documentFolder.getUrlFromFileName(fileName))
 
                 Presenter.instance.uploadFinished(fileName,true);
 
