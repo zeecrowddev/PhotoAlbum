@@ -67,6 +67,7 @@ Zc.AppView
             tooltip : "Close Aplication"
             onTriggered:
             {
+                Qt.inputMethod.hide();
                 mainView.close();
             }
         }
@@ -111,8 +112,27 @@ Zc.AppView
                 fileDialog.open()
             }
         }
+        ,
+        Action {
+            id: cameraAction
+            shortcut: "Ctrl+A"
+            iconSource: "qrc:/PhotoAlbum/Resources/camera.png"
+            tooltip : "Take a photo"
+            onTriggered:
+            {
+                loader.item.showCamera();
+            }
+        }
     ]
 
+    property string localPath : ""
+
+    function uploadFile(fileName)
+    {
+        var tmp = [];
+        tmp.push(fileName)
+        putFilesOnTheCloud(tmp);
+    }
 
     Zc.AppNotification
     {
@@ -515,6 +535,7 @@ Zc.AppView
         onStarted:
         {
             participantPreview.loadItems();
+            mainView.localPath =  mainView.context.temporaryPath;
             documentFolder.ensureLocalPathExists();
             documentFolder.ensureLocalPathExists(".upload/");
             documentFolder.loadRemoteFiles(documentFolderQueryStatus);
@@ -659,17 +680,17 @@ Zc.AppView
         }
     }
 
+
     function putFilesOnTheCloud(fileUrls)
     {
         openUploadView()
 
         var fds = [];
 
-
         for ( var i = 0 ; i < fileUrls.length ; i ++)
         {
             var fd = documentFolder.createFileDescriptorFromFile(fileUrls[i]);
-
+            fd.name = Date.now().toString() + "_" + fd.name;
 
             if (fd !== null)
             {
@@ -677,12 +698,14 @@ Zc.AppView
                 fdo.fileDescriptor =fd;
                 fdo.url = fileUrls[i];
                 fds.push(fdo);
+
                 fd.queryProgress = 1;
+
             }
         }
 
         Tools.forEachInArray(fds, function (x)
-        {
+        {            
             Presenter.instance.startUpload(x.fileDescriptor.cast,x.url);
         });
     }

@@ -25,5 +25,7 @@
         <file>Views/SplashScreen.qml</file>
         <file>Views/Tools.js</file>
         <file>Views/UploadStatusView.qml</file>
+        <file>Views/CameraView.qml</file>
+        <file>Resources/camera.png</file>
     </qresource>
 </RCC>

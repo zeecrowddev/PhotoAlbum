@@ -39,3 +39,6 @@ OTHER_FILES += \
 
 RESOURCES += \
     ../../Source/PhotoAlbum.qrc
+
+DISTFILES += \
+    ../../Source/Views/CameraView.qml

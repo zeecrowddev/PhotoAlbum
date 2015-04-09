@@ -43,6 +43,28 @@ Item
     property string iconFollowingNickname : ""
 
 
+    function showCamera()
+    {
+        cameraPreview.visible = true;
+        cameraPreview.source = "CameraView.qml";
+        cameraPreview.item.localPath = mainView.localPath
+        cameraPreview.item.close.connect( function (x) {
+        cameraPreview.source = "";
+        cameraPreview.visible = false; })
+        cameraPreview.item.sendCameraPicture.connect(function (x)
+        {
+            cameraPreview.source = ""
+            cameraPreview.visible = false;
+
+            if (x !== "")
+            {
+               mainView.uploadFile(x)
+            }
+
+        } );
+
+    }
+
     function stopWaiting()
     {
         commentsView.state = "comments"
@@ -162,6 +184,8 @@ Item
                         tooltip     : "Validate the comment"
                         onTriggered :
                         {
+                            textAreaComment.focus = false;
+
                             if (textAreaComment.text !== "" && textAreaComment.text !== null && textAreaComment.text !== undefined)
                             {
                                 commentsView.state = "uploading"
@@ -185,6 +209,7 @@ Item
                     tooltip     : "Cancel the comment"
                     onTriggered :
                     {
+                        textAreaComment.focus = false;
                         commentsView.state = "comments"
                     }
                 }
@@ -313,183 +338,201 @@ Item
     Layout.fillWidth : true
     Layout.fillHeight : true
 
-    Image
+
+    Item
     {
-        id : preview
-        anchors
-        {
-            top : parent.top
-            right : parent.right
-            left : parent.left
-            bottom : parent.bottom
-            bottomMargin : 70
-            topMargin : 10
-        }
+        id : imagePreview
 
-        fillMode: Image.PreserveAspectFit
-    }
-
-    Row
-    {
-        width : 210
-        height : 50
-        spacing: 10
-
-        visible: albumListView.state == "Following"
-
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 5
-        anchors.horizontalCenter: parent.horizontalCenter
-
-        Button
-        {
-            id : stopFollow
-
-            width : 50
-            height : 50
-
-            style:
-            ButtonStyle {
-                background: Rectangle {
-                    implicitWidth: 30
-                    implicitHeight: 30
-
-                    color : control.pressed ? "#EEEEEE" : "#00000000"
-                    radius: 4
-
-                    Image
-                    {
-                        source : "qrc:/PhotoAlbum/Resources/close.png"
-                        anchors.fill: parent
-                    }
-                }
-            }
-
-            onClicked:
-            {
-                albumListView.state = "Consultation"
-                albumListView.followingNickname = ""
-            }
-        }
+        anchors.fill: parent
 
         Image
         {
-            id : followIconUser
-            width : 40
-            height : 40
+            id : preview
+
+            MouseArea
+            {
+                anchors.fill : parent
+                onClicked:
+                {
+                    inputMessage.focus = false
+                }
+            }
+
+            anchors
+            {
+                top : parent.top
+                right : parent.right
+                left : parent.left
+                bottom : parent.bottom
+                bottomMargin : 70
+                topMargin : 10
+            }
 
             fillMode: Image.PreserveAspectFit
-            anchors.verticalCenter: stopFollow.verticalCenter
+        }
 
-            source : iconFollowingNickname
+        Row
+        {
+            width : 210
+            height : 50
+            spacing: 10
 
-            onStatusChanged:
+            visible: albumListView.state == "Following"
+
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 5
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            Button
             {
-                if (status === Image.Error)
+                id : stopFollow
+
+                width : 50
+                height : 50
+
+                style:
+                ButtonStyle {
+                    background: Rectangle {
+                        implicitWidth: 30
+                        implicitHeight: 30
+
+                        color : control.pressed ? "#EEEEEE" : "#00000000"
+                        radius: 4
+
+                        Image
+                        {
+                            source : "qrc:/PhotoAlbum/Resources/close.png"
+                            anchors.fill: parent
+                        }
+                    }
+                }
+
+                onClicked:
                 {
-                    source = "qrc:/Crowd.Core/Qml/Ressources/Pictures/DefaultUser.png"
+                    albumListView.state = "Consultation"
+                    albumListView.followingNickname = ""
                 }
             }
-        }
 
-        Label
-        {
-            width : 100
-            anchors.verticalCenter: stopFollow.verticalCenter
-            text : "Following : " + albumListView.followingNickname
-            font.pixelSize: 16
-        }
+            Image
+            {
+                id : followIconUser
+                width : 40
+                height : 40
 
+                fillMode: Image.PreserveAspectFit
+                anchors.verticalCenter: stopFollow.verticalCenter
 
-    }
+                source : iconFollowingNickname
 
-    Row
-    {
-        width : 110
-        height : 50
-        spacing: 10
-
-        visible: albumListView.state == "Consultation"
-
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 5
-        anchors.horizontalCenter: parent.horizontalCenter
-
-        Button
-        {
-            width : 50
-            height : 50
-
-
-            style:
-            ButtonStyle {
-                background: Rectangle {
-                    implicitWidth: 50
-                    implicitHeight: 50
-
-                    color : control.pressed ? "#EEEEEE" : "#00000000"
-                    radius: 4
-
-                    Image
+                onStatusChanged:
+                {
+                    if (status === Image.Error)
                     {
-                        source : "qrc:/PhotoAlbum/Resources/previous.png"
-                        anchors.fill: parent
+                        source = "qrc:/Crowd.Core/Qml/Ressources/Pictures/DefaultUser.png"
                     }
                 }
             }
 
-            onClicked:
+            Label
             {
-                if (listView.currentIndex > 0 )
-                    listView.currentIndex = listView.currentIndex - 1;
+                width : 100
+                anchors.verticalCenter: stopFollow.verticalCenter
+                text : "Following : " + albumListView.followingNickname
+                font.pixelSize: 16
             }
+
+
         }
 
-        Button
+        Row
         {
-            width : 50
+            width : 110
             height : 50
+            spacing: 10
+
+            visible: albumListView.state == "Consultation"
+
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 5
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            Button
+            {
+                width : 50
+                height : 50
 
 
-            style:
-            ButtonStyle {
-                background: Rectangle {
-                    implicitWidth: 50
-                    implicitHeight: 50
+                style:
+                ButtonStyle {
+                    background: Rectangle {
+                        implicitWidth: 50
+                        implicitHeight: 50
 
-                    color : control.pressed ? "#EEEEEE" : "#00000000"
-                    radius: 4
+                        color : control.pressed ? "#EEEEEE" : "#00000000"
+                        radius: 4
 
-                    Image
-                    {
-                        source : "qrc:/PhotoAlbum/Resources/next.png"
-                        anchors.fill: parent
+                        Image
+                        {
+                            source : "qrc:/PhotoAlbum/Resources/previous.png"
+                            anchors.fill: parent
+                        }
                     }
+                }
+
+                onClicked:
+                {
+                    if (listView.currentIndex > 0 )
+                        listView.currentIndex = listView.currentIndex - 1;
                 }
             }
 
-            onClicked:
+            Button
             {
-                if ( listView.currentIndex + 1 <  listView.model.count  )
-                    listView.currentIndex = listView.currentIndex + 1
+                width : 50
+                height : 50
 
+
+                style:
+                ButtonStyle {
+                    background: Rectangle {
+                        implicitWidth: 50
+                        implicitHeight: 50
+
+                        color : control.pressed ? "#EEEEEE" : "#00000000"
+                        radius: 4
+
+                        Image
+                        {
+                            source : "qrc:/PhotoAlbum/Resources/next.png"
+                            anchors.fill: parent
+                        }
+                    }
+                }
+
+                onClicked:
+                {
+                    if ( listView.currentIndex + 1 <  listView.model.count  )
+                        listView.currentIndex = listView.currentIndex + 1
+
+                }
             }
         }
-    }
 
-    ProgressBar
-    {
-        anchors.centerIn: preview
-        visible : preview.status === Image.Loading
-        opacity: 0.5
+        ProgressBar
+        {
+            anchors.centerIn: preview
+            visible : preview.status === Image.Loading
+            opacity: 0.5
 
-        height : 20
-        width : preview.paintedWidth - 10
-        minimumValue: 0
-        maximumValue: 1
-        value       : preview.progress
+            height : 20
+            width : preview.paintedWidth - 10
+            minimumValue: 0
+            maximumValue: 1
+            value       : preview.progress
 
-        style: ProgressBarStyle{}
+            style: ProgressBarStyle{}
+        }
     }
 }
 
@@ -550,7 +593,7 @@ Item
         anchors.left : parent.left
         anchors.right: parent.right
 
-        height: previewItem.height - 70
+        height: previewItem.height - 70 - toolBarChat.height
 
 
         clip: true
@@ -591,6 +634,11 @@ Item
         anchors.bottomMargin: 5
         onAccepted:
         {
+            if (Qt.platform.os === "android")
+            {
+                inputMessage.resetFocus()
+            }
+
             senderChat.sendMessage(message)
         }
     }
@@ -742,4 +790,14 @@ Item
     }
 }
 }
+
+    Loader
+    {
+        id : cameraPreview
+
+        anchors.fill: parent
+
+        visible : false
+    }
+
 }

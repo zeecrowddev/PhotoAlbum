@@ -36,6 +36,11 @@ FocusScope
         textField.forceActiveFocus();
     }
 
+    function resetFocus()
+    {
+        textField.focus = false;
+    }
+
 
     Rectangle
     {
